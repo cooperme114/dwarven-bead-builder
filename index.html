@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dwarven Guest Bead Builder</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div>
+      <p class="eyebrow">Dwarven Welcome Center</p>
+      <h1>Guest Bead Builder</h1>
+      <p class="lede">Choose the answers for a visitor. Shape tells the question; color or pattern tells the answer.</p>
+    </div>
+    <div class="header-actions">
+      <button id="loadAdessa" class="primary">Load Adessa</button>
+      <button id="resetAll">Reset</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="preview-panel" aria-labelledby="previewTitle">
+      <div class="preview-heading">
+        <div>
+          <h2 id="previewTitle">Necklace preview</h2>
+          <p>House-support beads stay together in the center. Click a house bead below to withdraw or restore support.</p>
+        </div>
+        <input id="characterName" aria-label="Character name" placeholder="Character name" />
+      </div>
+      <div class="necklace-stage">
+        <div class="cord"></div>
+        <div id="necklacePreview" class="necklace-preview" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section class="builder-grid" id="builder"></section>
+  </main>
+
+  <template id="categoryTemplate">
+    <article class="category-card">
+      <div class="category-top">
+        <div>
+          <p class="question-number"></p>
+          <h3></h3>
+          <p class="category-note"></p>
+        </div>
+        <div class="current-bead"></div>
+      </div>
+      <div class="option-list"></div>
+    </article>
+  </template>
+
+  <footer>
+    <p>Foreign guests answer ten questions under Dwarven hospitality. The seven clear glass House beads are separate and may be removed by the Houses themselves.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
