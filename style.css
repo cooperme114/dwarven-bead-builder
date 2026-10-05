@@ -102,7 +102,7 @@ footer{padding:28px 0 50px;color:var(--muted);text-align:center}
 .diamond::after{width:7px;height:7px;border-radius:50%;left:11px;top:11px}
 .cube{width:31px;height:31px;border-radius:4px}
 .cube::after{width:8px;height:8px;border-radius:50%;left:-4px;top:11px}
-.shard{width:20px;height:38px;clip-path:polygon(48% 0,100% 20%,72% 100%,9% 79%);border-radius:2px}
+.shard{width:19px;height:42px;clip-path:polygon(34% 0,88% 9%,100% 33%,58% 100%,10% 83%,0 42%);border-radius:2px}
 .shard::after{width:6px;height:6px;border-radius:50%;left:7px;top:8px}
 .hex{width:34px;height:30px;clip-path:polygon(25% 0,75% 0,100% 50%,75% 100%,25% 100%,0 50%)}
 .hex::after{width:7px;height:7px;border-radius:50%;left:13px;top:11px}
@@ -179,4 +179,62 @@ footer{padding:28px 0 50px;color:var(--muted);text-align:center}
   #characterName{width:100%}
   .necklace-stage{min-height:260px;overflow:auto}
   .necklace-preview{justify-content:flex-start;min-width:760px}
+}
+
+
+/* Profession dropdowns */
+.profession-controls{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:15px}
+.profession-controls label{display:flex;flex-direction:column;gap:6px;color:var(--muted);font-size:.82rem;font-weight:700}
+.profession-controls select{
+  width:100%;background:#17120f;color:var(--ink);border:1px solid #5a4635;
+  border-radius:10px;padding:10px 11px;font:inherit
+}
+.profession-controls select:disabled{opacity:.45}
+
+/* On the necklace, beads are seen from the side of their stringing holes.
+   The hole itself is hidden by the cord. */
+.necklace-preview .shape::after{display:none}
+.necklace-preview .ring{
+  width:15px;height:31px;border-radius:46% 46% 42% 42%;
+  box-shadow:inset 3px 0 3px rgba(255,255,255,.18),inset -3px 0 3px rgba(0,0,0,.18),0 2px 2px rgba(0,0,0,.2)
+}
+.necklace-preview .heishi{
+  width:8px;height:29px;border-radius:48%;
+  box-shadow:inset 2px 0 2px rgba(255,255,255,.2),inset -2px 0 2px rgba(0,0,0,.18)
+}
+.necklace-preview .coin{
+  width:10px;height:34px;border-radius:45%;
+}
+.necklace-preview .hex{
+  width:18px;height:31px;clip-path:polygon(24% 0,76% 0,100% 22%,100% 78%,76% 100%,24% 100%,0 78%,0 22%)
+}
+.necklace-preview .diamond{
+  width:25px;height:25px
+}
+.necklace-preview .barrel{
+  width:36px;height:25px
+}
+.necklace-preview .hourglass{
+  width:31px;height:28px
+}
+
+/* Residence shards hang from their small hole instead of sitting inline. */
+.bead-wrap.residence-preview{
+  width:20px;height:34px;align-self:center
+}
+.bead-wrap.residence-preview .shard{
+  position:absolute;top:8px;left:0;
+  width:19px;height:42px;
+  transform:none;
+  filter:drop-shadow(0 3px 3px rgba(0,0,0,.28))
+}
+.bead-wrap.residence-preview::before{
+  content:"";position:absolute;top:11px;left:8px;width:3px;height:8px;background:#171717;border-radius:3px
+}
+
+/* The hanging child drops also hide their stringing hole. */
+.child-stack .drop::after{display:none}
+
+@media (max-width:760px){
+  .profession-controls{grid-template-columns:1fr}
 }
