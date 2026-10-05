@@ -319,19 +319,52 @@ function renderPreview(){
 }
 
 function render(){
-  document.querySelector("#characterName").value=state.name;
-  renderBuilder(); renderPreview();
+  const nameInput=document.querySelector("#characterName");
+  const nameDisplay=document.querySelector("#nameDisplay");
+  if(nameInput && nameInput.value!==state.name) nameInput.value=state.name;
+  if(nameDisplay){
+    const clean=state.name.trim();
+    nameDisplay.textContent=clean ? clean + "’s guest necklace" : "";
+    nameDisplay.hidden=!clean;
+  }
+  renderBuilder();
+  renderPreview();
 }
 
-document.querySelector("#characterName").addEventListener("input",e=>state.name=e.target.value);
-
-document.querySelector("#resetAll").onclick=()=>{
+function resetState(){
   Object.assign(state,{
-    name:"",residence:"unknown",professionPrimary:"none",professionSecondary:"none",rank:"common",life:"child",
-    marriage:["never"],children:["none"],religion:"none",crisis:["child"],wealth:"dependent",
-    crimes:["none"],houses:["red","orange","yellow","green","blue","purple","pink"]
+    name:"",
+    residence:"unknown",
+    professionPrimary:"none",
+    professionSecondary:"none",
+    rank:"common",
+    life:"child",
+    marriage:["never"],
+    children:["none"],
+    religion:"none",
+    crisis:["child"],
+    wealth:"dependent",
+    crimes:["none"],
+    houses:["red","orange","yellow","green","blue","purple","pink"]
   });
-  render();
-};
+}
 
-render();
+document.addEventListener("DOMContentLoaded",()=>{
+  resetState();
+
+  const nameInput=document.querySelector("#characterName");
+  nameInput.addEventListener("input",e=>{
+    state.name=e.target.value;
+    const nameDisplay=document.querySelector("#nameDisplay");
+    const clean=state.name.trim();
+    nameDisplay.textContent=clean ? clean + "’s guest necklace" : "";
+    nameDisplay.hidden=!clean;
+  });
+
+  document.querySelector("#resetAll").onclick=()=>{
+    resetState();
+    render();
+  };
+
+  render();
+});
