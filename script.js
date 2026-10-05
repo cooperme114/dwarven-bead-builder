@@ -53,7 +53,7 @@ const definitions = {
     ]
   },
   children: {
-    n:6, title:"Do you have children?", note:"Small teardrops hang below the necklace. Add one bead per child; white is used only when there are none.",
+    n:6, title:"Do you have children?", note:"Small teardrops hang below the necklace. Add one bead per child; use + and - for multiple children of the same type. White is used only when there are none.",
     shape:"drop", multiple:true, max:30, hanging:true,
     options:[
       ["none","No children","white"],["daughter","Daughter","yellow"],["nb","Nonbinary child","orange"],["son","Son","red"],
@@ -221,6 +221,78 @@ function renderBuilder(){
       });
     }
     const list=card.querySelector(".option-list");
+
+    if(key==="children"){
+      list.classList.add("child-option-list");
+
+      const noneData=optionData(def,"none");
+      const noneButton=document.createElement("button");
+      noneButton.className="option child-none-option";
+      if(state.children.length===1 && state.children[0]==="none") noneButton.classList.add("selected");
+      noneButton.append(bead(def.shape,noneData[2],"mini"));
+      const noneText=document.createElement("span");
+      noneText.textContent=noneData[1];
+      noneButton.append(noneText);
+      noneButton.onclick=()=>{
+        state.children=["none"];
+        render();
+      };
+      list.append(noneButton);
+
+      def.options.filter(([value])=>value!=="none").forEach(([value,label,cls])=>{
+        const row=document.createElement("div");
+        row.className="child-count-option";
+
+        const info=document.createElement("div");
+        info.className="child-count-label";
+        info.append(bead(def.shape,cls,"mini"));
+        const text=document.createElement("span");
+        text.textContent=label;
+        info.append(text);
+
+        const controls=document.createElement("div");
+        controls.className="child-count-controls";
+
+        const minus=document.createElement("button");
+        minus.type="button";
+        minus.className="count-button";
+        minus.textContent="−";
+        minus.setAttribute("aria-label",`Remove one ${label}`);
+        minus.onclick=()=>{
+          let arr=state.children.filter(x=>x!=="none");
+          const i=arr.indexOf(value);
+          if(i>=0) arr.splice(i,1);
+          state.children=arr.length ? arr : ["none"];
+          render();
+        };
+
+        const count=document.createElement("span");
+        count.className="child-count";
+        const amount=state.children.filter(x=>x===value).length;
+        count.textContent=String(amount);
+        count.setAttribute("aria-label",`${amount} ${label}`);
+
+        const plus=document.createElement("button");
+        plus.type="button";
+        plus.className="count-button";
+        plus.textContent="+";
+        plus.setAttribute("aria-label",`Add one ${label}`);
+        plus.onclick=()=>{
+          let arr=state.children.filter(x=>x!=="none");
+          if(arr.length<(def.max||30)) arr.push(value);
+          state.children=arr.length ? arr : ["none"];
+          render();
+        };
+
+        controls.append(minus,count,plus);
+        row.append(info,controls);
+        list.append(row);
+      });
+
+      root.append(card);
+      return;
+    }
+
     def.options.forEach(([value,label,cls])=>{
       const b=document.createElement("button");
       b.className="option";
