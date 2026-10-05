@@ -338,3 +338,14 @@ footer{padding:28px 0 50px;color:var(--muted);text-align:center}
     grid-column:auto;
   }
 }
+
+
+/* Let the House-support explanation use the full panel width. */
+.house-panel .category-top > div{width:100%}
+.house-panel .category-note{
+  max-width:none;
+  white-space:nowrap;
+}
+@media (max-width:760px){
+  .house-panel .category-note{white-space:normal}
+}
