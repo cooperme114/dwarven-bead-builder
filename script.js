@@ -237,7 +237,9 @@ function renderBuilder(){
           if(key==="children" && value==="none"){ arr=["none"]; }
           else if(key==="crimes" && value==="none"){ arr=["none"]; }
           else if(key==="crisis" && value==="child"){ arr=["child"]; }
+          else if(key==="marriage" && value==="never"){ arr=["never"]; }
           else {
+            if(key==="marriage") arr=arr.filter(x=>x!=="never");
             if(arr.includes(value)) arr.splice(arr.indexOf(value),1);
             else if(arr.length<(def.max||20)) arr.push(value);
           }
