@@ -128,7 +128,7 @@ function professionBead(extra=""){
 
 const houseDef = {
   title:"Dwarven House support", note:"These seven clear glass beads are permissions, not answers. A House may remove its own bead if it withdraws hospitality.",
-  options:[["red","Red House","glass-red"],["orange","Orange House","glass-orange"],["yellow","Yellow House","glass-yellow"],["green","Green House","glass-green"],["blue","Blue House","glass-blue"],["purple","Purple House","glass-purple"],["pink","Pink House","glass-pink"]]
+  options:[["red","House Durnak","glass-red"],["orange","House Brannor","glass-orange"],["yellow","House Keldrin","glass-yellow"],["green","House Morgrin","glass-green"],["blue","House Varrik","glass-blue"],["purple","House Tholgar","glass-purple"],["pink","House Belgrun","glass-pink"]]
 };
 
 function optionData(def,key){ return def.options.find(o=>o[0]===key); }
