@@ -1,4 +1,5 @@
 const state = {
+  name: "",
   residence: "unknown",
   professionPrimary: "none",
   professionSecondary: "none",
@@ -344,12 +345,15 @@ function renderPreview(){
 }
 
 function render(){
+  const nameInput=document.querySelector("#characterName");
+  if(nameInput && nameInput.value!==state.name) nameInput.value=state.name;
   renderBuilder();
   renderPreview();
 }
 
 function resetState(){
   Object.assign(state,{
+    name:"",
     residence:"unknown",
     professionPrimary:"none",
     professionSecondary:"none",
@@ -365,11 +369,80 @@ function resetState(){
   });
 }
 
+const PRESET_KEY="dwarvenGuestBeadPresets";
+
+function getPresets(){
+  try{
+    return JSON.parse(localStorage.getItem(PRESET_KEY) || "{}");
+  }catch{
+    return {};
+  }
+}
+
+function setPresets(presets){
+  localStorage.setItem(PRESET_KEY,JSON.stringify(presets));
+}
+
+function refreshPresetList(selectedName=""){
+  const select=document.querySelector("#savedPresets");
+  const presets=getPresets();
+  select.innerHTML='<option value="">Saved characters...</option>';
+  Object.keys(presets).sort((a,b)=>a.localeCompare(b)).forEach(name=>{
+    const option=document.createElement("option");
+    option.value=name;
+    option.textContent=name;
+    select.append(option);
+  });
+  if(selectedName && presets[selectedName]) select.value=selectedName;
+}
+
 document.addEventListener("DOMContentLoaded",()=>{
   resetState();
+
+  const nameInput=document.querySelector("#characterName");
+  nameInput.addEventListener("input",e=>{ state.name=e.target.value; });
+
+  document.querySelector("#savePreset").onclick=()=>{
+    const name=state.name.trim();
+    if(!name){
+      nameInput.focus();
+      nameInput.placeholder="Enter a name first";
+      return;
+    }
+    state.name=name;
+    const presets=getPresets();
+    presets[name]=JSON.parse(JSON.stringify(state));
+    setPresets(presets);
+    refreshPresetList(name);
+  };
+
+  document.querySelector("#loadPreset").onclick=()=>{
+    const name=document.querySelector("#savedPresets").value;
+    if(!name) return;
+    const preset=getPresets()[name];
+    if(!preset) return;
+    Object.assign(state,JSON.parse(JSON.stringify(preset)));
+    normalizeSpecials("children");
+    normalizeSpecials("crimes");
+    normalizeSpecials("crisis");
+    render();
+  };
+
+  document.querySelector("#deletePreset").onclick=()=>{
+    const select=document.querySelector("#savedPresets");
+    const name=select.value;
+    if(!name) return;
+    const presets=getPresets();
+    delete presets[name];
+    setPresets(presets);
+    refreshPresetList();
+  };
+
   document.querySelector("#resetAll").onclick=()=>{
     resetState();
     render();
   };
+
+  refreshPresetList();
   render();
 });
