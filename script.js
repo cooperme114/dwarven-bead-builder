@@ -1,5 +1,4 @@
 const state = {
-  name: "",
   residence: "unknown",
   professionPrimary: "none",
   professionSecondary: "none",
@@ -90,7 +89,7 @@ const definitions = {
     shape:"heishi", multiple:true, max:20,
     options:[
       ["none","No record","crime-none"],["pending","Pending trial","crime-pending"],["violent","Violent crime","crime-violent"],
-      ["economic","Economic / property crime","crime-economic"],["order","Public-order crime","crime-order"]
+      ["economic","Economic crime","crime-economic"],["order","Public-order crime","crime-order"]
     ]
   }
 };
@@ -345,21 +344,12 @@ function renderPreview(){
 }
 
 function render(){
-  const nameInput=document.querySelector("#characterName");
-  const nameDisplay=document.querySelector("#nameDisplay");
-  if(nameInput && nameInput.value!==state.name) nameInput.value=state.name;
-  if(nameDisplay){
-    const clean=state.name.trim();
-    nameDisplay.textContent=clean ? clean + "’s guest necklace" : "";
-    nameDisplay.hidden=!clean;
-  }
   renderBuilder();
   renderPreview();
 }
 
 function resetState(){
   Object.assign(state,{
-    name:"",
     residence:"unknown",
     professionPrimary:"none",
     professionSecondary:"none",
@@ -377,20 +367,9 @@ function resetState(){
 
 document.addEventListener("DOMContentLoaded",()=>{
   resetState();
-
-  const nameInput=document.querySelector("#characterName");
-  nameInput.addEventListener("input",e=>{
-    state.name=e.target.value;
-    const nameDisplay=document.querySelector("#nameDisplay");
-    const clean=state.name.trim();
-    nameDisplay.textContent=clean ? clean + "’s guest necklace" : "";
-    nameDisplay.hidden=!clean;
-  });
-
   document.querySelector("#resetAll").onclick=()=>{
     resetState();
     render();
   };
-
   render();
 });
