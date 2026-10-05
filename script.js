@@ -74,7 +74,7 @@ const definitions = {
     options:[
       ["child","Child / no assignment","clear"],["combat","Combat","red"],["evacuate","Evacuation","blue"],["medical","Medical","white"],
       ["service","Service / supplies","green"],["magic","Magic","purple"],["organize","Organize","pink"],["repair","Repair","orange"],
-      ["care","Care for vulnerable people","yellow"],["search","Search / scout","black"]
+      ["care","Care","yellow"],["unable","Unable to Help","black"]
     ]
   },
   wealth: {
@@ -290,32 +290,58 @@ function addPreviewBead(container,key,value){
 }
 
 function renderPreview(){
-  const p=document.querySelector("#necklacePreview"); p.innerHTML="";
-  // personal beads on the left
-  ["residence","rank","life","marriage"].forEach(key=>{
-    const vals=Array.isArray(state[key])?state[key]:[state[key]];
-    vals.forEach(v=>addPreviewBead(p,key,v));
-  });
-  addPreviewBead(p,"profession",null);
-  // crimes + economic + religion + crisis on left side before center
-  state.crimes.forEach(v=>addPreviewBead(p,"crimes",v));
-  addPreviewBead(p,"wealth",state.wealth);
-  addPreviewBead(p,"religion",state.religion);
-  state.crisis.forEach(v=>addPreviewBead(p,"crisis",v));
+  const p=document.querySelector("#necklacePreview");
+  p.innerHTML="";
 
-  // house support center
-  houseDef.options.filter(([v])=>state.houses.includes(v)).forEach(([v,,cls])=>{
-    const wrap=document.createElement("span"); wrap.className="bead-wrap"; wrap.title=`${v} House supports this guest`;
-    wrap.append(bead("sphere",cls,"preview-bead")); p.append(wrap);
-  });
+  // 1. House support
+  houseDef.options
+    .filter(([v])=>state.houses.includes(v))
+    .forEach(([v,,cls])=>{
+      const wrap=document.createElement("span");
+      wrap.className="bead-wrap";
+      wrap.title=`${v} House supports this guest`;
+      wrap.append(bead("sphere",cls,"preview-bead"));
+      p.append(wrap);
+    });
 
-  // hanging children attached immediately after center
-  const childAnchor=document.createElement("span"); childAnchor.className="bead-wrap";
-  const stack=document.createElement("span"); stack.className="child-stack";
+  // 2. Marriage
+  state.marriage.forEach(v=>addPreviewBead(p,"marriage",v));
+
+  // 3. Kids
+  const childAnchor=document.createElement("span");
+  childAnchor.className="bead-wrap";
+  const stack=document.createElement("span");
+  stack.className="child-stack";
   state.children.forEach(v=>{
-    const d=optionData(definitions.children,v); if(d) stack.append(bead("drop",d[2],"preview-bead"));
+    const d=optionData(definitions.children,v);
+    if(d) stack.append(bead("drop",d[2],"preview-bead"));
   });
-  childAnchor.append(stack); p.append(childAnchor);
+  childAnchor.append(stack);
+  p.append(childAnchor);
+
+  // 4. Life stage
+  addPreviewBead(p,"life",state.life);
+
+  // 5. Residence
+  addPreviewBead(p,"residence",state.residence);
+
+  // 6. Social standing
+  addPreviewBead(p,"rank",state.rank);
+
+  // 7. Profession
+  addPreviewBead(p,"profession",null);
+
+  // 8. Economic
+  addPreviewBead(p,"wealth",state.wealth);
+
+  // 9. Religion
+  addPreviewBead(p,"religion",state.religion);
+
+  // 10. Crime
+  state.crimes.forEach(v=>addPreviewBead(p,"crimes",v));
+
+  // 11. Crisis
+  state.crisis.forEach(v=>addPreviewBead(p,"crisis",v));
 }
 
 function render(){
