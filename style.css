@@ -141,7 +141,25 @@ footer{padding:28px 0 50px;color:var(--muted);text-align:center}
 .life-adolescent{background-color:#4f9c66;background-image:radial-gradient(#e9e3cc 2px,transparent 3px);background-size:9px 9px}
 .life-young{background:repeating-linear-gradient(90deg,#e88527 0 6px,#f6d7a7 6px 9px)}
 .life-mature{background-color:#397ab1;background-image:linear-gradient(45deg,#e7e2cc 25%,transparent 25%,transparent 75%,#e7e2cc 75%),linear-gradient(45deg,#e7e2cc 25%,transparent 25%,transparent 75%,#e7e2cc 75%);background-position:0 0,6px 6px;background-size:12px 12px}
-.life-elder{background:radial-gradient(circle at 28% 38%,transparent 0 4px,#ddd 4px 6px,transparent 6px),#774c93}
+.life-elder{
+  background:
+    radial-gradient(circle at 32% 34%, transparent 0 4px, #ddd 4px 5.5px, transparent 5.5px),
+    radial-gradient(circle at 67% 63%, transparent 0 3px, #ddd 3px 4.5px, transparent 4.5px),
+    radial-gradient(circle at 58% 28%, transparent 0 2.5px, #ddd 2.5px 4px, transparent 4px),
+    conic-gradient(from 0deg at 32% 34%,
+      transparent 0 18%,
+      #ddd 18% 28%,
+      transparent 28% 58%,
+      #ddd 58% 68%,
+      transparent 68% 100%),
+    conic-gradient(from 20deg at 67% 63%,
+      transparent 0 20%,
+      #ddd 20% 30%,
+      transparent 30% 60%,
+      #ddd 60% 70%,
+      transparent 70% 100%),
+    #774c93;
+}
 
 .res-elf{background-color:#37245f;background-image:radial-gradient(#fff 1.3px,transparent 1.7px);background-size:8px 9px}
 .res-orc{background:repeating-radial-gradient(ellipse at 20% 50%,#73523e 0 3px,#4d8a54 4px 9px)}
