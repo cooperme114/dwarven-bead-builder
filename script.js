@@ -69,7 +69,7 @@ const definitions = {
     ]
   },
   crisis: {
-    n:8, title:"How will you help in an emergency?", note:"Hourglass. Every non-child guest must volunteer for at least one crisis role.",
+    n:8, title:"How will you help in an emergency?", note:"Hourglass. Choose one crisis role.",
     shape:"hourglass", multiple:true, max:9,
     options:[
       ["child","Child / no assignment","clear"],["combat","Combat","red"],["evacuate","Evacuation","blue"],["medical","Medical","white"],
@@ -236,7 +236,7 @@ function renderBuilder(){
           let arr=[...state[key]];
           if(key==="children" && value==="none"){ arr=["none"]; }
           else if(key==="crimes" && value==="none"){ arr=["none"]; }
-          else if(key==="crisis" && value==="child"){ arr=["child"]; }
+          else if(key==="crisis"){ arr=[value]; }
           else if(key==="marriage" && value==="never"){ arr=["never"]; }
           else {
             if(key==="marriage") arr=arr.filter(x=>x!=="never");
