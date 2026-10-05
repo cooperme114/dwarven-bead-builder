@@ -1,7 +1,8 @@
 const state = {
   name: "",
   residence: "unknown",
-  profession: "martial-education",
+  professionPrimary: "martial",
+  professionSecondary: "education",
   rank: "common",
   life: "young",
   marriage: ["widowed"],
@@ -24,12 +25,8 @@ const definitions = {
     ]
   },
   profession: {
-    n:2, title:"What is your profession?", note:"Cube. Primary career function is the main color; secondary function is painted on two opposite faces.",
-    shape:"cube", multiple:false,
-    options:[
-      ["none","No profession","prof-clear"],["martial-education","Martial + Education","prof-martial-education"],
-      ["education-craft","Education + Craft","prof-education-craft"]
-    ]
+    n:2, title:"What is your profession?", note:"Cube. Choose a primary career function and an optional secondary function. No profession is the clear cube.",
+    shape:"cube", custom:"profession"
   },
   rank: {
     n:3, title:"What is your social standing?", note:"Metallic hexagon. This is standing in your own society, not wealth.",
@@ -98,6 +95,37 @@ const definitions = {
   }
 };
 
+const professionCategories = [
+  ["martial","Martial","#b82c2c"],
+  ["education","Education / Knowledge","#e9c42b"],
+  ["craft","Craft","#d9781f"],
+  ["agriculture","Agriculture / Resources","#398950"],
+  ["healing","Healing / Care","#326ba4"],
+  ["government","Government / Law","#74459a"],
+  ["arts","Arts","#d46a99"],
+  ["service","Service","#79513c"],
+  ["religion","Religion / Spiritual","#ece7da"],
+  ["trade","Trade / Commerce","#171717"]
+];
+
+function professionLabel(key){
+  return professionCategories.find(x=>x[0]===key)?.[1] || "None";
+}
+function professionColor(key){
+  return professionCategories.find(x=>x[0]===key)?.[2] || "#fff";
+}
+function professionBead(extra=""){
+  const el=bead("cube","",extra);
+  if(state.professionPrimary==="none"){
+    el.classList.add("prof-clear");
+  } else {
+    const p=professionColor(state.professionPrimary);
+    const s=state.professionSecondary==="none" ? p : professionColor(state.professionSecondary);
+    el.style.background=`linear-gradient(90deg,${p} 0 33%,${s} 33% 66%,${p} 66%)`;
+  }
+  return el;
+}
+
 const houseDef = {
   title:"Dwarven House support", note:"These seven clear glass beads are permissions, not answers. A House may remove its own bead if it withdraws hospitality.",
   options:[["red","Red House","glass-red"],["orange","Orange House","glass-orange"],["yellow","Yellow House","glass-yellow"],["green","Green House","glass-green"],["blue","Blue House","glass-blue"],["purple","Purple House","glass-purple"],["pink","Pink House","glass-pink"]]
@@ -140,6 +168,53 @@ function renderBuilder(){
     card.querySelector("h3").textContent=def.title;
     card.querySelector(".category-note").textContent=def.note;
     const current=card.querySelector(".current-bead");
+
+    if(key==="profession"){
+      current.append(professionBead());
+      const list=card.querySelector(".option-list");
+      list.remove();
+
+      const controls=document.createElement("div");
+      controls.className="profession-controls";
+
+      const primaryLabel=document.createElement("label");
+      primaryLabel.textContent="Primary function";
+      const primary=document.createElement("select");
+      const noProf=document.createElement("option");
+      noProf.value="none"; noProf.textContent="No profession";
+      primary.append(noProf);
+      professionCategories.forEach(([value,label])=>{
+        const o=document.createElement("option"); o.value=value; o.textContent=label; primary.append(o);
+      });
+      primary.value=state.professionPrimary;
+      primary.onchange=()=>{
+        state.professionPrimary=primary.value;
+        if(primary.value==="none") state.professionSecondary="none";
+        else if(state.professionSecondary===primary.value) state.professionSecondary="none";
+        render();
+      };
+      primaryLabel.append(primary);
+
+      const secondaryLabel=document.createElement("label");
+      secondaryLabel.textContent="Secondary function";
+      const secondary=document.createElement("select");
+      const none=document.createElement("option");
+      none.value="none"; none.textContent="None (solid cube)";
+      secondary.append(none);
+      professionCategories.filter(([value])=>value!==state.professionPrimary).forEach(([value,label])=>{
+        const o=document.createElement("option"); o.value=value; o.textContent=label; secondary.append(o);
+      });
+      secondary.value=state.professionSecondary;
+      secondary.disabled=state.professionPrimary==="none";
+      secondary.onchange=()=>{state.professionSecondary=secondary.value;render();};
+      secondaryLabel.append(secondary);
+
+      controls.append(primaryLabel,secondaryLabel);
+      card.append(controls);
+      root.append(card);
+      return;
+    }
+
     const values=Array.isArray(state[key])?state[key]:[state[key]];
     if(def.hanging){
       current.append(bead(def.shape,optionData(def,values[0])?.[2]||"white"));
@@ -197,8 +272,18 @@ function renderBuilder(){
 }
 
 function addPreviewBead(container,key,value){
-  const def=definitions[key], d=optionData(def,value); if(!d) return;
-  const wrap=document.createElement("span"); wrap.className="bead-wrap";
+  const def=definitions[key];
+  const wrap=document.createElement("span");
+  wrap.className="bead-wrap" + (key==="residence" ? " residence-preview" : "");
+
+  if(key==="profession"){
+    wrap.title=`Profession — ${state.professionPrimary==="none" ? "No profession" : professionLabel(state.professionPrimary) + (state.professionSecondary==="none" ? "" : " + " + professionLabel(state.professionSecondary))}`;
+    wrap.append(professionBead("preview-bead"));
+    container.append(wrap);
+    return;
+  }
+
+  const d=optionData(def,value); if(!d) return;
   wrap.title=`${def.title} — ${d[1]}`;
   wrap.append(bead(def.shape,d[2],"preview-bead"));
   container.append(wrap);
@@ -207,10 +292,11 @@ function addPreviewBead(container,key,value){
 function renderPreview(){
   const p=document.querySelector("#necklacePreview"); p.innerHTML="";
   // personal beads on the left
-  ["residence","profession","rank","life","marriage"].forEach(key=>{
+  ["residence","rank","life","marriage"].forEach(key=>{
     const vals=Array.isArray(state[key])?state[key]:[state[key]];
     vals.forEach(v=>addPreviewBead(p,key,v));
   });
+  addPreviewBead(p,"profession",null);
   // crimes + economic + religion + crisis on left side before center
   state.crimes.forEach(v=>addPreviewBead(p,"crimes",v));
   addPreviewBead(p,"wealth",state.wealth);
@@ -241,7 +327,7 @@ document.querySelector("#characterName").addEventListener("input",e=>state.name=
 
 document.querySelector("#resetAll").onclick=()=>{
   Object.assign(state,{
-    name:"",residence:"unknown",profession:"none",rank:"common",life:"young",
+    name:"",residence:"unknown",professionPrimary:"none",professionSecondary:"none",rank:"common",life:"young",
     marriage:["never"],children:["none"],religion:"none",crisis:["service"],wealth:"independent",
     crimes:["none"],houses:["red","orange","yellow","green","blue","purple","pink"]
   });
@@ -250,7 +336,7 @@ document.querySelector("#resetAll").onclick=()=>{
 
 document.querySelector("#loadAdessa").onclick=()=>{
   Object.assign(state,{
-    name:"Adessa",residence:"unknown",profession:"martial-education",rank:"common",life:"young",
+    name:"Adessa",residence:"unknown",professionPrimary:"martial",professionSecondary:"education",rank:"common",life:"young",
     marriage:["widowed"],children:["deceased"],religion:"physical",crisis:["search"],wealth:"debt",
     crimes:["violent","economic"],houses:["red","orange","yellow","green","blue","purple","pink"]
   });
