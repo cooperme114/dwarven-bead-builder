@@ -73,7 +73,7 @@ const definitions = {
     shape:"hourglass", multiple:true, max:9,
     options:[
       ["child","Child / no assignment","clear"],["combat","Combat","red"],["evacuate","Evacuation","blue"],["medical","Medical","white"],
-      ["service","Service / supplies","green"],["magic","Magic","purple"],["organize","Organize","pink"],["repair","Repair","orange"],
+      ["service","Service","green"],["magic","Magic","purple"],["organize","Organize","pink"],["repair","Repair","orange"],
       ["care","Care","yellow"],["unable","Unable to Help","black"]
     ]
   },
