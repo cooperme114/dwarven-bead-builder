@@ -150,11 +150,8 @@ function normalizeSpecials(key){
     if(state.crimes.length===0) state.crimes=["none"];
   }
   if(key==="crisis"){
-    if(state.life==="child") state.crisis=["child"];
-    else {
-      state.crisis=state.crisis.filter(x=>x!=="child");
-      if(state.crisis.length===0) state.crisis=["service"];
-    }
+    if(!Array.isArray(state.crisis) || state.crisis.length===0) state.crisis=["child"];
+    else state.crisis=[state.crisis[state.crisis.length-1]];
   }
 }
 
@@ -246,7 +243,6 @@ function renderBuilder(){
           state[key]=arr;
         } else state[key]=value;
         normalizeSpecials(key);
-        if(key==="life") normalizeSpecials("crisis");
         render();
       };
       list.append(b);
