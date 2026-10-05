@@ -1,16 +1,16 @@
 const state = {
   name: "",
   residence: "unknown",
-  professionPrimary: "martial",
-  professionSecondary: "education",
+  professionPrimary: "none",
+  professionSecondary: "none",
   rank: "common",
-  life: "young",
-  marriage: ["widowed"],
-  children: ["deceased"],
-  religion: "physical",
-  crisis: ["search"],
-  wealth: "debt",
-  crimes: ["violent","economic"],
+  life: "child",
+  marriage: ["never"],
+  children: ["none"],
+  religion: "none",
+  crisis: ["child"],
+  wealth: "dependent",
+  crimes: ["none"],
   houses: ["red","orange","yellow","green","blue","purple","pink"]
 };
 
@@ -19,9 +19,9 @@ const definitions = {
     n:1, title:"Where do you live?", note:"Residence shard. White means the Dwarves have no recorded bead for that place; black means no fixed home.",
     shape:"shard", multiple:false,
     options:[
-      ["elf","Elven lands","res-elf"],["orc","Orc marsh","res-orc"],["dwarf","Dwarven islands","res-dwarf"],
-      ["gnome","Gnomish lands","res-gnome"],["tabaxi","Tabaxi volcanic lands","res-tabaxi"],
-      ["unknown","Unknown / unrecorded","res-unknown"],["traveler","No fixed home","res-traveler"]
+      ["elf","Ilunthariel","res-elf"],["orc","Raizfundas","res-orc"],["dwarf","Oresundrullen","res-dwarf"],
+      ["gnome","Gnome City","res-gnome"],["tabaxi","Ryi-ann","res-tabaxi"],
+      ["unknown","Unknown","res-unknown"],["traveler","No Home","res-traveler"]
     ]
   },
   profession: {
@@ -327,18 +327,9 @@ document.querySelector("#characterName").addEventListener("input",e=>state.name=
 
 document.querySelector("#resetAll").onclick=()=>{
   Object.assign(state,{
-    name:"",residence:"unknown",professionPrimary:"none",professionSecondary:"none",rank:"common",life:"young",
-    marriage:["never"],children:["none"],religion:"none",crisis:["service"],wealth:"independent",
+    name:"",residence:"unknown",professionPrimary:"none",professionSecondary:"none",rank:"common",life:"child",
+    marriage:["never"],children:["none"],religion:"none",crisis:["child"],wealth:"dependent",
     crimes:["none"],houses:["red","orange","yellow","green","blue","purple","pink"]
-  });
-  render();
-};
-
-document.querySelector("#loadAdessa").onclick=()=>{
-  Object.assign(state,{
-    name:"Adessa",residence:"unknown",professionPrimary:"martial",professionSecondary:"education",rank:"common",life:"young",
-    marriage:["widowed"],children:["deceased"],religion:"physical",crisis:["search"],wealth:"debt",
-    crimes:["violent","economic"],houses:["red","orange","yellow","green","blue","purple","pink"]
   });
   render();
 };
